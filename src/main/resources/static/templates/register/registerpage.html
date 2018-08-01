@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body style="background-color:#E6EBF1">
+
+<style>
+    * {
+        font-family: "Helvetica Neue", Helvetica;
+        font-size: 15px;
+        font-variant: normal;
+        padding: 0;
+        margin: 0;
+    }
+
+
+
+    form {
+        width: 480px;
+        margin: 20px auto;
+    }
+
+    .group {
+        background: white;
+        box-shadow: 0 7px 14px 0 rgba(49,49,93,0.10),
+        0 3px 6px 0 rgba(0,0,0,0.08);
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+
+    label {
+        position: relative;
+        color: #8898AA;
+        font-weight: 300;
+        height: 40px;
+        line-height: 40px;
+        margin-left: 20px;
+        display: block;
+    }
+
+    .group label:not(:last-child) {
+        border-bottom: 1px solid #F0F5FA;
+    }
+
+    label > span {
+        width: 20%;
+        text-align: right;
+        float: left;
+    }
+
+    .field {
+        background: transparent;
+        font-weight: 300;
+        border: 0;
+        color: #31325F;
+        outline: none;
+        padding-right: 5px;
+        padding-left: 15px;
+        cursor: text;
+        width: 70%;
+        height: 40px;
+        float: right;
+    }
+
+    .field::-webkit-input-placeholder { color: #CFD7E0; }
+    .field::-moz-placeholder { color: #CFD7E0; }
+    .field:-ms-input-placeholder { color: #CFD7E0; }
+
+    button {
+        float: left;
+        display: block;
+        background: #666EE8;
+        color: white;
+        box-shadow: 0 7px 14px 0 rgba(49,49,93,0.10),
+        0 3px 6px 0 rgba(0,0,0,0.08);
+        border-radius: 4px;
+        border: 0;
+        margin-top: 20px;
+        font-size: 15px;
+        font-weight: 400;
+        width: 100%;
+        height: 40px;
+        line-height: 38px;
+        outline: none;
+    }
+
+    button:focus {
+        background: #555ABF;
+    }
+
+    button:active {
+        background: #43458B;
+    }
+
+    .outcome {
+        float: left;
+        width: 100%;
+        padding-top: 8px;
+        min-height: 24px;
+        text-align: center;
+    }
+
+    .success, .error {
+        display: none;
+        font-size: 15px;
+    }
+
+    .success.visible, .error.visible {
+        display: inline;
+    }
+
+    .error {
+        color: #E4584C;
+    }
+
+    .success {
+        color: #666EE8;
+    }
+
+    .success .token {
+        font-weight: 500;
+        font-size: 13px;
+    }
+
+</style>
+
+<!--<script>-->
+    <!--$('.flagstrap').flagStrap();-->
+<!--</script>-->
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <form onsubmit='save(); return false;'>
+            <div>
+                <h2>Sign-up form</h2>
+            </div>
+            <br>
+            <div class="group">
+                <label>*First name:</label><input id="1" onKeyPress="removeErrorMessage()"  name="first-name" class="field" placeholder=" Jane Doe" />
+                <label>*Last name:</label><input id="2" onKeyPress="removeErrorMessage()"  name="last-name" class="field" placeholder="Jane Doe" />
+                <label>*Email:</label><input id="3" onKeyPress="removeErrorMessage()"  name="email" class="field" placeholder="Jane Doe" />
+                <label>Phone number:</label><input id="4" type="number" onKeyPress="removeErrorMessage()"  name="phone-number" class="field" placeholder="Jane Doe" />
+            </div>
+            <br>
+            <div class="group">
+                <label>Company name:</label><input id="5" onKeyPress="removeErrorMessage()"  name="company-name" class="field" placeholder="Jane Doe" />
+                <!--<label>Select Country</label><br>-->
+                <!--<div class="flagstrap" data-input-name="country"></div>-->
+            </div>
+            <br>
+            <div class="group">
+                <label>*Username:</label><input id="6" onKeyPress="removeErrorMessage()"  name="user-name" class="field" placeholder="Jane Doe" />
+                <label>*Password:</label><input id="7" onKeyPress="removeErrorMessage()" name="password"  class="field" type="password" />
+                <label>*Password:</label><input id="8" onKeyPress="removeErrorMessage()" name="repeatPassword"  class="field" type="password" />
+            </div>
+            <br>
+            <div class="outcome">
+                <div class="error" role="alert"></div>
+                <div class="success">
+                    Success! Your Stripe token is <span class="token"></span>
+                </div>
+            </div>
+            <br>
+            <br>
+            <center>
+                <!--<a href="/templates/subscriptionpage.html" type="button" onclick="save()" class="btn btn-default">Continue<span class="glyphicon glyphicon-chevron-right"></span></a>-->
+                <button class="btn btn-default">Continue<span class="glyphicon glyphicon-chevron-right"></span></button>
+            </center>
+        </form>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+<script>
+    var customer ={};
+    customer.firstName="";
+    customer.lastName="";
+    customer.email="";
+    customer.phoneNumber="";
+    customer.companyName="";
+    customer.userName="";
+    customer.password="";
+    customer.repeatPassword="";
+
+    var form = document.querySelector('form');
+    if(window.localStorage.getItem("customer.firstName")){form.querySelector('input[name=first-name]').value=window.localStorage.getItem("customer.firstName")}
+    if(window.localStorage.getItem("customer.lastName")){form.querySelector('input[name=last-name]').value=window.localStorage.getItem("customer.lastName")}
+    if(window.localStorage.getItem("customer.email")){form.querySelector('input[name=email]').value=window.localStorage.getItem("customer.email")}
+    if(window.localStorage.getItem("customer.phoneNumber")){form.querySelector('input[name=phone-number]').value=window.localStorage.getItem("customer.phoneNumber")}
+    if(window.localStorage.getItem("customer.companyName")){form.querySelector('input[name=company-name]').value=window.localStorage.getItem("customer.companyName")}
+    if(window.localStorage.getItem("customer.userName")){form.querySelector('input[name=user-name]').value=window.localStorage.getItem("customer.userName")}
+
+
+
+    function save() {
+        var errorElement = document.querySelector('.error');
+        errorElement.classList.remove('visible');
+        var form = document.querySelector('form');
+        if(form.querySelector('input[name=first-name]').value.length>0 && form.querySelector('input[name=last-name]').value.length>0 && form.querySelector('input[name=email]').value.length>0 &&
+            form.querySelector('input[name=phone-number]').value.length>0 && form.querySelector('input[name=company-name]').value.length>0 && form.querySelector('input[name=user-name]').value.length>0 &&
+            form.querySelector('input[name=password]').value.length>0 && form.querySelector('input[name=repeatPassword]').value.length>0){
+            if(form.querySelector('input[name=password]').value == form.querySelector('input[name=repeatPassword]').value) {
+                storeForm();
+                checkIfUserNameIsValidAndGoToSubscriptionPage();
+            }
+            else{
+                errorElement.textContent = "Passwords have to be equal.";
+                errorElement.classList.add('visible')
+            }
+        }
+        else{
+            errorElement.textContent = "Please fill in all required form fields";
+            errorElement.classList.add('visible')
+        }
+    };
+
+
+    function storeForm() {
+        window.localStorage.setItem("customer.firstName", form.querySelector('input[name=first-name]').value);
+        window.localStorage.setItem("customer.lastName", form.querySelector('input[name=last-name]').value);
+        window.localStorage.setItem("customer.email", form.querySelector('input[name=email]').value);
+        window.localStorage.setItem("customer.phoneNumber", form.querySelector('input[name=phone-number]').value);
+        window.localStorage.setItem("customer.companyName", form.querySelector('input[name=company-name]').value);
+        window.localStorage.setItem("customer.userName", form.querySelector('input[name=user-name]').value);
+        window.localStorage.setItem("customer.repeatPassword", form.querySelector('input[name=repeatPassword]').value);
+    }
+
+    function checkIfUserNameIsValidAndGoToSubscriptionPage(){
+         $.ajax({
+            url : window.location.origin + "/login/user?username=" + form.querySelector('input[name=user-name]').value,
+            type: "POST",
+            dataType   : 'json',
+            success: function(data, textStatus, jqXHR)
+            {
+                if("yes"===data.available){
+                    window.location.href = window.location.origin + "/templates/subscription/subscriptionpage.html";
+                }
+                else{
+                    var errorElement = document.querySelector('.error');
+                    errorElement.textContent = "Sorry, this username is already used.";
+                    errorElement.classList.add('visible');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown)
+            {
+                var errorElement = document.querySelector('.error');
+                errorElement.textContent = "Sorry, something went wrong, please try again";
+                errorElement.classList.add('visible');
+            }
+        });
+    }
+
+    function removeErrorMessage(){
+        var errorElement = document.querySelector('.error');
+        errorElement.classList.remove('visible');
+    }
+
+
+
+</script>
+
+
+
+</body>
+</html>

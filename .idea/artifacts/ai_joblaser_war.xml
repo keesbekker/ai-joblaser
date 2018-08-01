@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="ai-joblaser:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="ai-joblaser-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="ai-joblaser:war exploded" />
+    </root>
+  </artifact>
+</component>
